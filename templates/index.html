@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Performance Analysis</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark">SP</span><div><b>Student Analytics</b><small>Academic insights</small></div></div>
+    <nav>
+      <button class="nav-link active" data-page="dashboard">▦ <span>Dashboard</span></button>
+      <button class="nav-link" data-page="students">♙ <span>Students</span></button>
+      <button class="nav-link" data-page="branches">⌂ <span>Branches</span></button>
+      <button class="nav-link" data-page="subjects">▤ <span>Subjects</span></button>
+      <button class="nav-link" data-page="assessments">▣ <span>Assessments</span></button>
+      <button class="nav-link" data-page="marks">✎ <span>Marks entry</span></button>
+      <button class="nav-link" data-page="results">▥ <span>Results & reports</span></button>
+    </nav>
+    <div class="sidebar-note"><span class="dot"></span> Academic workspace <small>Sample data enabled</small></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div><p class="eyebrow">ACADEMIC OVERVIEW</p><h1 id="page-title">Dashboard</h1></div><div class="user-chip"><span class="avatar">AD</span><span><b>Administrator</b><small>Academic office</small></span></div></header>
+    <div id="notice" class="notice hidden" role="status"></div>
+    <section id="page-dashboard" class="page">
+      <div class="welcome"><div><p class="eyebrow light">STUDENT PERFORMANCE ANALYSIS</p><h2>Turn marks into meaningful insights.</h2><p>Monitor outcomes, find learning gaps, and support students early.</p></div><div class="welcome-icon">✦</div></div>
+      <div class="stats-grid">
+        <article class="stat-card"><div class="stat-top"><span>Total students</span><span class="stat-icon purple">♙</span></div><strong id="stat-students">—</strong><small>Registered learners</small></article>
+        <article class="stat-card"><div class="stat-top"><span>Branches</span><span class="stat-icon blue">⌂</span></div><strong id="stat-branches">—</strong><small>Academic departments</small></article>
+        <article class="stat-card"><div class="stat-top"><span>Subjects</span><span class="stat-icon orange">▤</span></div><strong id="stat-subjects">—</strong><small>Subjects available</small></article>
+        <article class="stat-card"><div class="stat-top"><span>Class average</span><span class="stat-icon green">↗</span></div><strong id="stat-average">—<em>%</em></strong><small>Across entered marks</small></article>
+      </div>
+      <div class="content-grid">
+        <article class="panel"><div class="panel-heading"><div><h3>Performance snapshot</h3><p>Distribution of assessment percentages</p></div><span class="pill">Live data</span></div><div class="chart-wrap"><canvas id="performanceChart" aria-label="Performance summary chart"></canvas></div></article>
+        <article class="panel"><div class="panel-heading"><div><h3>At a glance</h3><p>Key academic indicators</p></div></div><div class="metric-row"><div class="metric-icon green">✓</div><div><span>Pass percentage</span><small>Scores of 40% or above</small></div><strong id="stat-pass">—%</strong></div><div class="metric-row"><div class="metric-icon orange">!</div><div><span>Need academic support</span><small>Assessment scores below 40%</small></div><strong id="stat-support">—</strong></div><div class="metric-row"><div class="metric-icon blue">▣</div><div><span>Assessments</span><small>Exams and tests created</small></div><strong id="stat-assessments">—</strong></div><button class="primary-btn full" data-goto="results">View results report <span>→</span></button></article>
+      </div>
+      <article class="panel table-panel"><div class="panel-heading"><div><h3>Recently recorded results</h3><p>Sample and saved assessment marks</p></div><button class="text-btn" data-goto="results">See all →</button></div><div class="table-scroll"><table><thead><tr><th>Student</th><th>Assessment</th><th>Score</th><th>Grade</th><th>Status</th></tr></thead><tbody id="recent-results"><tr><td colspan="5">Loading results…</td></tr></tbody></table></div></article>
+    </section>
+    <section id="page-students" class="page hidden">
+      <div class="section-intro"><div><h2>Student management</h2><p>Add learners and maintain their branch and semester details.</p></div></div>
+      <article class="panel"><h3>Add student</h3><form id="student-form" class="form-grid"><label>Roll number<input name="roll_no" required placeholder="e.g. CSE004"></label><label>Student name<input name="name" required placeholder="Full name"></label><label>Branch<select name="branch_id" id="student-branch" required></select></label><label>Semester<select name="semester" required><option value="">Select semester</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></label><button class="primary-btn" type="submit">+ Add student</button></form></article>
+      <article class="panel table-panel"><div class="panel-heading"><h3>Student directory</h3><input id="student-search" class="search" placeholder="Search students…"></div><div class="table-scroll"><table><thead><tr><th>Roll number</th><th>Name</th><th>Branch</th><th>Semester</th><th>Action</th></tr></thead><tbody id="students-table"></tbody></table></div></article>
+    </section>
+    <section id="page-branches" class="page hidden">
+      <div class="section-intro"><div><h2>Branch management</h2><p>Manage academic branches used throughout the system.</p></div></div>
+      <article class="panel"><h3>Create branch</h3><form id="branch-form" class="inline-form"><label>Branch name<input name="name" required placeholder="e.g. CSE"></label><button class="primary-btn">Add branch</button></form></article>
+      <article class="panel table-panel"><h3>Available branches</h3><div class="table-scroll"><table><thead><tr><th>ID</th><th>Branch</th></tr></thead><tbody id="branches-table"></tbody></table></div></article>
+    </section>
+    <section id="page-subjects" class="page hidden">
+      <div class="section-intro"><div><h2>Subject management</h2><p>Keep the subject catalogue organized by branch.</p></div></div>
+      <article class="panel"><h3>Add subject</h3><form id="subject-form" class="form-grid"><label>Subject code<input name="code" required placeholder="CS303"></label><label>Subject name<input name="name" required placeholder="Operating Systems"></label><label>Branch<select name="branch_id" id="subject-branch"><option value="">All branches / common</option></select></label><button class="primary-btn">Add subject</button></form></article>
+      <article class="panel table-panel"><h3>Subject catalogue</h3><div class="table-scroll"><table><thead><tr><th>Code</th><th>Subject</th><th>Branch</th></tr></thead><tbody id="subjects-table"></tbody></table></div></article>
+    </section>
+    <section id="page-assessments" class="page hidden">
+      <div class="section-intro"><div><h2>Assessment management</h2><p>Create exams and tests before recording marks.</p></div></div>
+      <article class="panel"><h3>Create assessment</h3><form id="assessment-form" class="form-grid"><label>Assessment title<input name="title" required placeholder="Midterm 2"></label><label>Subject<select name="subject_id" id="assessment-subject" required></select></label><label>Semester<select name="semester" required><option value="">Select semester</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></label><label>Maximum marks<input name="max_marks" type="number" min="1" step="0.5" required value="100"></label><label>Exam date<input name="exam_date" type="date"></label><button class="primary-btn">Create assessment</button></form></article>
+      <article class="panel table-panel"><h3>Assessments</h3><div class="table-scroll"><table><thead><tr><th>Title</th><th>Subject</th><th>Semester</th><th>Max marks</th><th>Date</th></tr></thead><tbody id="assessments-table"></tbody></table></div></article>
+    </section>
+    <section id="page-marks" class="page hidden">
+      <div class="section-intro"><div><h2>Marks entry</h2><p>Enter or update a student's marks for an assessment.</p></div></div>
+      <article class="panel"><h3>Record marks</h3><form id="marks-form" class="form-grid"><label>Student<select name="student_id" id="marks-student" required></select></label><label>Assessment<select name="assessment_id" id="marks-assessment" required></select></label><label>Marks obtained<input name="marks_obtained" type="number" min="0" step="0.5" required placeholder="0–maximum"></label><button class="primary-btn">Save marks</button></form><p class="form-hint">Saving the same student and assessment again updates the existing mark.</p></article>
+      <article class="panel table-panel"><h3>Recorded marks</h3><div class="table-scroll"><table><thead><tr><th>Roll no.</th><th>Student</th><th>Assessment</th><th>Marks</th><th>Percentage</th></tr></thead><tbody id="marks-table"></tbody></table></div></article>
+    </section>
+    <section id="page-results" class="page hidden">
+      <div class="section-intro"><div><h2>Results & reports</h2><p>Review grades, class outcomes, and students who may need support.</p></div><button class="secondary-btn" id="export-results">↓ Export CSV</button></div>
+      <div class="stats-grid compact"><article class="stat-card"><span>Class average</span><strong id="report-average">—%</strong></article><article class="stat-card"><span>Pass percentage</span><strong id="report-pass">—%</strong></article><article class="stat-card"><span>Records assessed</span><strong id="report-count">—</strong></article><article class="stat-card"><span>Need support</span><strong id="report-support">—</strong></article></div>
+      <article class="panel"><div class="panel-heading"><div><h3>Results register</h3><p>One row per student assessment</p></div><input id="results-search" class="search" placeholder="Search results…"></div><div class="table-scroll"><table><thead><tr><th>Roll no.</th><th>Student</th><th>Branch / Sem</th><th>Assessment</th><th>Score</th><th>Grade</th><th>Status</th></tr></thead><tbody id="results-table"></tbody></table></div></article>
+      <article class="panel table-panel"><div class="panel-heading"><div><h3>Branch & semester comparison</h3><p>Average and pass rate grouped by branch and semester</p></div></div><div class="table-scroll"><table><thead><tr><th>Branch</th><th>Semester</th><th>Students</th><th>Average</th><th>Pass percentage</th></tr></thead><tbody id="branch-report-table"></tbody></table></div></article>
+    </section>
+    <footer>Student Performance Analysis System <span>•</span> Academic insights for better outcomes</footer>
+  </main>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body></html>
