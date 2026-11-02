@@ -6,3 +6,4 @@ class Config:
     MYSQL_DB = os.getenv("MYSQL_DB", "student_performance")
     MYSQL_CURSORCLASS = "DictCursor"
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-only-change-me")
+     MYSQL_PORT = int(os.getenv("MYSQL_PORT", "3306"))
